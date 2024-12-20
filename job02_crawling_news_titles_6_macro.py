@@ -27,7 +27,7 @@ service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service = service, options = options)
 
 
-for i in range(1,3):                                              # Sub_domain : 100 ~ 105
+for i in range(0,6):                                              # Sub_domain : 100 ~ 105
     url = 'https://news.naver.com/section/10{}'.format(i)
     driver.get(url)
     titles = []                                                 # Create empty list for save headline
@@ -39,11 +39,14 @@ for i in range(1,3):                                              # Sub_domain :
 
     # click macro
     for l in range(15):
-        time.sleep(0.3)                                         # Delay time to create button
-        driver.find_element(By.XPATH, button_xpath).click()     # set click
+        time.sleep(0.3)
+        try:
+            print(l)# Delay time to create button
+            driver.find_element(By.XPATH, button_xpath).click()     # set click
+        except:
+            print('exception : ', l)
 
-
-    for j in range(1, 98):
+    for j in range(1, 97):
         for k in range(1, 7):
 
             if i == 1:
@@ -53,7 +56,7 @@ for i in range(1,3):                                              # Sub_domain :
 
             try:
                 title = driver.find_element(By.XPATH, title_xpath).text
-                title = re.compile('[^가-힣 ]').sub('', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
+                title = re.compile('[^가-힣 ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
                 titles.append(title)
 
                 print(title)
@@ -72,7 +75,7 @@ driver.close()                                                  # close browser
 print(df_titles.head())
 df_titles.info()
 print(df_titles['category'].value_counts())
-df_titles.to_csv('./crawling_data/naver_headline_news_exam_economic_social{}.csv'.format(
+df_titles.to_csv('./crawling_data/naver_headline_news_exam_total{}.csv'.format(
     datetime.datetime.now().strftime('%Y%m%d')), index = False) # Change time format to 'YYYYMMDD'
                                                                 # index = False == 0, 1, 2 default index = False
 

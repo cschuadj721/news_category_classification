@@ -36,12 +36,12 @@ titles = []
 df_titles = pd.DataFrame()
 
 # 15번 기사 더보기 버튼 클릭
-for i in range(15):
+for i in range(137):
     time.sleep(0.5)
     driver.find_element(By.XPATH, button_xpath).click()
 
 # 97개의 div에서
-for i in range(1,98):
+for i in range(1,900):
 
     # 6개의 기사제목 뽑기
     for j in range(1,7):
