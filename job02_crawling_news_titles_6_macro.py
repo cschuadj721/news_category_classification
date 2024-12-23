@@ -38,7 +38,7 @@ for i in range(0,6):                                              # Sub_domain :
         button_xpath = '//*[@id="newsct"]/div[4]/div/div[2]'
 
     # click macro
-    for l in range(15):
+    for l in range(1):
         time.sleep(0.3)
         try:
             print(l)# Delay time to create button
@@ -46,7 +46,7 @@ for i in range(0,6):                                              # Sub_domain :
         except:
             print('exception : ', l)
 
-    for j in range(1, 97):
+    for j in range(1, 16):
         for k in range(1, 7):
 
             if i == 1:

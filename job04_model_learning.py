@@ -6,26 +6,34 @@ from keras.layers import Conv2D, MaxPool2D, Dense, Flatten, Dropout, LSTM, Embed
 # from keras.models import *
 from tensorflow.python.framework.test_ops import kernel_label
 
-X_train = np.load('./crawling_data/news_data_X_train_max_16_wordsize6348.npy', allow_pickle = True)
-X_test = np.load('./crawling_data/news_data_X_test_max_16_wordsize6348.npy', allow_pickle = True)
-Y_train = np.load('./crawling_data/news_data_Y_train_max_16_wordsize6348.npy', allow_pickle = True)
-Y_test = np.load('./crawling_data/news_data_Y_test_max_16_wordsize6348.npy', allow_pickle = True)
+X_train = np.load('./crawling_data/news_data_X_train__wordsize6348.npy', allow_pickle = True)
+X_test = np.load('./crawling_data/news_data_X_test__wordsize6348.npy', allow_pickle = True)
+Y_train = np.load('./crawling_data/news_data_Y_train__wordsize6348.npy', allow_pickle = True)
+Y_test = np.load('./crawling_data/news_data_Y_test__wordsize6348.npy', allow_pickle = True)
 
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
 model = Sequential()
 
+# 자연어 학습일 때의 시작 레이어 전체 입력데이터의 모든 형태소의 개수 차원의 의미공간에 각각형태소를 벡터화해주는 레이어
 model.add(Embedding(6348, 300, input_length = 16))
+
 model.build(input_shape = (None,16))
 
 model.add(Conv1D(32, kernel_size=5, padding = 'same', activation = 'relu'))
 model.add(MaxPool1D(pool_size=1))
+
+#return sequences true 를 주면  RNN에서 나오는 각 계산값을 모아서 전달한다는 말이고,
+#모델이 완성된 경우에는 각계산값들은 더이상 필요가 없고 최종 RNN 학습을 통해서 생성된 하나의 파라미터 값만이 사용된다
 model.add(LSTM(128, activation = 'tanh', return_sequences=True))
 model.add(Dropout(0.3))
 model.add(LSTM(64, activation = 'tanh', return_sequences=True))
 model.add(Dropout(0.3))
-model.add(LSTM(64, activation = 'tanh', return_sequences=True))
+
+# 마지막 RNN, LSTM 층에서는 return sequences true가 필요없다 (전달할 필요가 없으니)
+# 그러나 전달해주어야 할 필요가 있을때도 있다
+model.add(LSTM(64, activation = 'tanh'))
 model.add(Dropout(0.3))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))

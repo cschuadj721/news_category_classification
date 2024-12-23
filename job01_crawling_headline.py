@@ -4,7 +4,6 @@ import re
 import pandas as pd
 import datetime
 
-print('hello')
 #뉴스 카테고리
 category = ['Politics', 'Economic', 'Social', 'Culture', 'World', 'IT']
 
@@ -15,7 +14,7 @@ df_titles = pd.DataFrame()
 #지민 for i in range(3,5):
 #재상 for i in range(5,6):
 
-for i in range(0, 6):
+for i in range(6):
     # 네이버 뉴스 기사
     url = 'https://news.naver.com/section/10{}'.format(i)
     resp = requests.get(url)
@@ -29,7 +28,7 @@ for i in range(0, 6):
         # 데이터 전처리
         # ^가-힣 쓸때 공백 한개 필수!!
         # sub('', title) 는 빼고 공백을 넣으라는 의미
-        title = re.compile('[^가-힣 ]').sub('', title)
+        title = re.compile('[^가-힣 ]').sub(' ', title)
         titles.append(title)
 
     df_section_titles = pd.DataFrame(titles, columns=['titles'])
@@ -37,10 +36,11 @@ for i in range(0, 6):
 
     df_titles = pd.concat([df_titles, df_section_titles], axis='rows', ignore_index=True)
 
-    # Save the file with category name in the filename
-    filename = './crawling_data/naver_headline_news_{}_{}.csv'.format(
-        datetime.datetime.now().strftime('%Y%m%d'), category[i])
-    df_section_titles.to_csv(filename, index=False)
+
+# Save the file with category name in the filename
+filename = './crawling_data/naver_headline_news_{}.csv'.format(
+    datetime.datetime.now().strftime('%Y%m%d'))
+df_section_titles.to_csv(filename, index=False)
 
 print(df_titles.head())
 df_titles.info()
